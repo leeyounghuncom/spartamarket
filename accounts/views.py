@@ -1,20 +1,16 @@
-from django.shortcuts import render, redirect
-from django.views.decorators.http import require_POST
-from django.shortcuts import get_object_or_404
-from django.contrib.auth import get_user_model
-from django.shortcuts import render, redirect
 from django.contrib.auth.forms import (AuthenticationForm, PasswordChangeForm, )
-
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
-from django.views.decorators.http import require_POST, require_http_methods
-from django.contrib.auth.forms import UserCreationForm
+from django.views.decorators.http import require_http_methods
 from django.contrib.auth import update_session_auth_hash
 from .forms import CustomUserChangeForm, CustomUserCreationForm
-from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_POST
 from django.contrib.auth import get_user_model
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
 from .models import Profile
+from .forms import ProfileImageForm
+
 
 # 로그인
 @require_http_methods(["GET", "POST"])
@@ -84,30 +80,10 @@ def signup(request):
 
     context = {"form": form}
     return render(request, "signup.html", context)
-# @require_http_methods(["GET", "POST"])
-# def signup(request):
-#     if request.method == "POST":
-#         form = CustomUserCreationForm(request.POST)
-#         if form.is_valid():
-#             user = form.save()
-#             auth_login(request, user)
-#             return redirect("products:product_list")
-#     else:
-#         form = CustomUserCreationForm()
-#     context = {"form": form}
-#     return render(request, "signup.html", context)
 
 
 def users(request):
     return render(request, "users/users.html")
-
-#
-# def profile(request, username):
-#     member = get_object_or_404(get_user_model(), username=username)
-#     context = {
-#         "member": member,
-#     }
-#     return render(request, "users/profile.html", context)
 
 
 @require_POST
@@ -132,14 +108,26 @@ def delete(request):
 
 
 # Create your views here.
+@login_required
 def profile(request, user_id):
     user = get_object_or_404(get_user_model(), pk=user_id)
     profile = get_object_or_404(Profile, user=user)
+
+    if request.method == 'POST':
+        form = ProfileImageForm(request.POST, request.FILES, instance=profile)
+        if form.is_valid():
+            form.save()
+            return redirect('accounts:profile', user_id=user_id)
+    else:
+        form = ProfileImageForm(instance=profile)
+
     context = {
         'user': user,
         'profile': profile,
+        'form': form,
     }
     return render(request, 'profile.html', context)
+
 
 @require_POST
 def follow(request, user_id):

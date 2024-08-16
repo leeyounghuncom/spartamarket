@@ -30,10 +30,22 @@
                         <li class="list-group-item d-flex justify-content-between lh-sm">
                             <div>
                                 <h6 class="my-0">댓글</h6>
-                                <small class="text-body-secondary"> </small>
                             </div>
                             <span class="text-body-secondary">{{ comments|length }}</span>
                         </li>
+                        <li class="list-group-item d-flex justify-content-between lh-sm">
+                            <div>
+                                <h6 class="my-0">조회수</h6>
+                            </div>
+                            <span class="text-body-secondary">{{ product.view }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between lh-sm">
+                            <div>
+                                <h6 class="my-0">찜</h6>
+                            </div>
+                            <span class="text-body-secondary">{{ product.like_users.count }}</span>
+                        </li>
+
                         <li class="list-group-item d-flex justify-content-between bg-body-tertiary">
                             <div class="text-success">
                                 <h6 class="my-0">Promo code</h6>
@@ -122,7 +134,11 @@
                                 {{ product.content }}
                             </p>
 
-
+<p>해시태그:
+    {% for hashtag in product.hashtags.all %}
+        <span>{{ hashtag.content }}, </span>
+    {% endfor %}
+</p>
                         </div>
 
                     </div>
@@ -260,6 +276,7 @@
     </div>
 
 
+<div class="hidden" style="display: none;">{{ product.update_counter }}</div>
 
 
 

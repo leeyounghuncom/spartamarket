@@ -1,22 +1,42 @@
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
+
+    <form method="GET" action="{% url 'products:product_list' %}">
+                    <input type="hidden" name="query" value="{{ request.GET.query }}">
+
+        <div class="form-group">
+            <select class="form-select" id="sortSelect" name="sort" onchange="this.form.submit()">
+                <option value="recent" {% if request.GET.sort == 'recent' %}selected{% endif %}>최신순</option>
+                <option value="likes" {% if request.GET.sort == 'likes' %}selected{% endif %}>추천순</option>
+            </select>
+        </div>
+    </form>
+    <p></p>
     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
         {% for product in products %}
             <div class="col">
                 <div class="card shadow-sm">
 
-                    <img src="{{ product.image.url }}" width="100%" height="225">
-
+                    {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="{{ product.title }}" width="100%" height="225">
+                    {% else %}
+                        <img src="/media/images/default.png" alt="Default Image" width="100%" height="225">
+                    {% endif %}
 
                     <div class="card-body">
                         <p class="card-text">{{ product.title }}</p>
+
+                        <p>해시태그:
+                            {% for hashtag in product.hashtags.all %}
+                                <a href="{% url 'products:product_list' %}?hashtag={{ hashtag.content }}">#{{ hashtag.content }}</a>
+                            {% endfor %}
+                        </p>
+
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="btn-group">
                                 <a href="{% url "products:product_detail" product.pk %}"
                                    class="btn btn-sm btn-outline-secondary">보기</a>
-
-
                                 {% if user in product.like_users.all %}
                                     <span class="btn btn-sm btn-outline-secondary">♥</span>
 

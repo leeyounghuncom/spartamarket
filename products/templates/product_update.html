@@ -1,10 +1,9 @@
 {% extends "base.html" %}
 
 {% block content %}
-
-<form id="product-edit-form" action="#" method="POST">
+<form id="product-edit-form" method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    {{ form.as_p}}
+    {{ form.as_p }}
 </form>
 <a href="{% url 'products:product_update' product.pk %}" onclick="event.preventDefault(); document.getElementById('product-edit-form').submit();" class="btn btn-danger">수정</a>
 <a href="{% url 'products:product_detail' product.pk %}" class="btn btn-primary">상품목록</a>
