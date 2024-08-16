@@ -52,28 +52,20 @@
                         <div class="card p-2">
                             <div class="d-grid gap-2">
 
+                                {% if user in product.like_users.all %}
 
-                                {% if request.user in product.like_users.all %}
-                                    <a href="{% url 'products:product_delete' product.pk %}"
-                                       onclick="event.preventDefault(); document.getElementById('products-like').submit();"
-                                       class="btn btn-success">
-                                        ♡
-                                    </a>
-
+                                    <a href="#"
+                                       onclick="event.preventDefault(); document.getElementById('like_product').submit();"
+                                       class="btn btn-success">♥</a>
                                 {% else %}
-                                    <a href="{% url 'products:product_delete' product.pk %}"
-                                       onclick="event.preventDefault(); document.getElementById('products-like').submit();"
-                                       class="btn btn-success">
-                                        ♥
-                                    </a>
-
-
+                                    <a href="#"
+                                       onclick="event.preventDefault(); document.getElementById('like_product').submit();"
+                                       class="btn btn-success">♡</a>
                                 {% endif %}
 
-                            <form id="products-like" action="{% url 'products:like' product.pk %}"
-                                          method="POST">
-                                        {% csrf_token %}
-                                    </form>
+
+                                <form id="like_product" action="{% url 'products:like_product' product.pk %}"
+                                      method="POST">{% csrf_token %}</form>
 
 
                                 {% if user == product.author %}

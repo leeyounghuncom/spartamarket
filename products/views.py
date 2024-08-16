@@ -96,12 +96,17 @@ def comment_delete(request, pk, comment_pk):
 
 
 @require_POST
-def like(request, pk):
+def like_product(request, pk):
     if request.user.is_authenticated:
         product = get_object_or_404(Product, pk=pk)
         if product.like_users.filter(pk=request.user.pk).exists():
-            product.like_users.remove(request.user)  # 좋아요 취소
+            product.like_users.remove(request.user)  # 찜 취소
         else:
-            product.like_users.add(request.user)  # 좋아요
-        return redirect('products:product_detail', pk=pk)  # pk 인자를 함께 전달
+            product.like_users.add(request.user)  # 찜 추가
+        return redirect('products:product_detail', pk=pk)
     return redirect('accounts:login')
+
+@login_required
+def liked_products(request):
+    products = request.user.liked_products.all()  # 사용자가 찜한 물건들
+    return render(request, 'liked_products.html', {'products': products})

@@ -15,10 +15,13 @@
                             <div class="btn-group">
                                 <a href="{% url "products:product_detail" product.pk %}"
                                    class="btn btn-sm btn-outline-secondary">보기</a>
+
+
                                 {% if user in product.like_users.all %}
-                                    <span class="btn btn-sm btn-outline-secondary">♡</span>
-                                {% else %}
                                     <span class="btn btn-sm btn-outline-secondary">♥</span>
+
+                                {% else %}
+                                    <span class="btn btn-sm btn-outline-secondary">♡</span>
                                 {% endif %}
 
                             </div>

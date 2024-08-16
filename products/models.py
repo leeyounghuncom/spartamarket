@@ -13,7 +13,7 @@ class Product(models.Model):
     )
 
     like_users = models.ManyToManyField(
-        settings.AUTH_USER_MODEL, related_name="like_articles"
+        settings.AUTH_USER_MODEL, related_name="liked_products", blank=True
     )
 
     def __str__(self):

@@ -17,7 +17,7 @@ urlpatterns = [
         views.comment_delete,
         name="comment_delete",
     ),
-    path("<int:pk>/like/", views.like, name="like"),
-    # path("index/", views.index, name="index"),
-    #
+    path("<int:pk>/like/", views.like_product, name="like_product"),  # 찜 기능 URL
+
+    path('liked/', views.liked_products, name='liked_products'),
 ]

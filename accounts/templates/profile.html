@@ -47,7 +47,6 @@
             <div class="col-md-8">
                 <h2>등록한 물건</h2>
                 <ul class="list-group">
-
                     {% for product in user.products.all %}
                         <li class="list-group-item">
                             <a href="{% url 'products:product_detail' product.id %}">
@@ -56,10 +55,10 @@
                         </li>
                     {% endfor %}
                 </ul>
-
                 <h2 class="mt-4">찜한 물건</h2>
                 <ul class="list-group">
-                    {% for product in user.like_products.all %}
+
+                    {% for product in user.liked_products.all %}
                         <li class="list-group-item">
                             <a href="{% url 'products:product_detail' product.id %}">
                                 {{ product.title }}
