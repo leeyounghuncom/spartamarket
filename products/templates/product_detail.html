@@ -1,0 +1,275 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+    <div class="container">
+        <main>
+
+            <div class="row g-5">
+                <div class="col-md-5 col-lg-4 order-md-last">
+                    <h4 class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="text-primary">기타</span>
+                    </h4>
+                    <ul class="list-group mb-3">
+                        <li class="list-group-item d-flex justify-content-between lh-sm">
+                            <div>
+                                <h6 class="my-0">작성일시</h6>
+
+                            </div>
+                            <span class="text-body-secondary">{{ product.created_at }}</span>
+
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between lh-sm">
+                            <div>
+                                <h6 class="my-0">수정일시</h6>
+                            </div>
+                            <span class="text-body-secondary">{{ product.updated_at }}</span>
+
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between lh-sm">
+                            <div>
+                                <h6 class="my-0">댓글</h6>
+                                <small class="text-body-secondary"> </small>
+                            </div>
+                            <span class="text-body-secondary">{{ comments|length }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between bg-body-tertiary">
+                            <div class="text-success">
+                                <h6 class="my-0">Promo code</h6>
+                                <small>EXAMPLECODE</small>
+                            </div>
+                            <span class="text-success">−$5</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span>Total (USD)</span>
+                            <strong>$20</strong>
+                        </li>
+                    </ul>
+
+
+                    {% if request.user.is_authenticated %}
+                        <div class="card p-2">
+                            <div class="d-grid gap-2">
+
+
+                                {% if request.user in product.like_users.all %}
+                                    <a href="{% url 'products:product_delete' product.pk %}"
+                                       onclick="event.preventDefault(); document.getElementById('products-like').submit();"
+                                       class="btn btn-success">
+                                        ♡
+                                    </a>
+
+                                {% else %}
+                                    <a href="{% url 'products:product_delete' product.pk %}"
+                                       onclick="event.preventDefault(); document.getElementById('products-like').submit();"
+                                       class="btn btn-success">
+                                        ♥
+                                    </a>
+
+
+                                {% endif %}
+
+                            <form id="products-like" action="{% url 'products:like' product.pk %}"
+                                          method="POST">
+                                        {% csrf_token %}
+                                    </form>
+
+
+                                {% if user == product.author %}
+
+
+
+                                    <a href="{% url 'products:product_update' product.pk %}" class="btn btn-primary">
+                                        수정하기
+                                    </a>
+                                    <a href="{% url 'products:product_delete' product.pk %}"
+                                       onclick="event.preventDefault(); document.getElementById('delete-form').submit();"
+                                       class="btn btn-danger">
+                                        삭제
+                                    </a>
+
+                                    <form id="delete-form" action="{% url 'products:product_delete' product.pk %}"
+                                          method="POST"
+                                          style="display: none;">
+                                        {% csrf_token %}
+                                    </form>
+
+
+
+                                {% endif %}
+                            </div>
+                        </div>
+
+
+
+                    {% endif %}
+
+
+                </div>
+                <div class="col-md-7 col-lg-8">
+                    <h4 class="mb-3">{{ product.title }}</h4>
+
+                    <div class="row g-3">
+
+                        <div class="col-12">
+                            <label for="firstName" class="form-label"><strong>작성자</strong></label>
+                            <p>{{ product.author.username }}</p>
+                        </div>
+
+
+                        <div class="col-12">
+                            <label for="username" class="form-label"><strong>내용</strong></label>
+                            <p>
+                                {% if product.image %}
+                                    <img src="{{ product.image.url }}" width="100%">
+                                {% endif %}
+                            </p>
+
+                            <p>
+                                {{ product.content }}
+                            </p>
+
+
+                        </div>
+
+                    </div>
+
+
+                    <hr class="my-4">
+
+                    {% if request.user.is_authenticated %}
+
+
+                        <form action="{% url 'products:comment_create' product.pk %}" method="post">
+                            {% csrf_token %}
+                            {{ comment_form.as_p }}
+                            <input type="submit" value="댓글작성" class="w-100 btn btn-primary btn-lg">
+                        </form>
+
+
+                        <style>
+                            /* 전체 폼 요소를 중앙 정렬 */
+                            p {
+                                margin-bottom: 1rem; /* 각 요소 간의 간격 */
+                            }
+
+                            /* 레이블 스타일 */
+                            p label {
+                                display: block; /* 레이블을 블록으로 표시하여 input과 같은 줄에 나타나지 않게 함 */
+                                margin-bottom: 0.5rem; /* 레이블과 입력 필드 사이의 간격 */
+                                font-weight: 500; /* 부트스트랩의 기본 레이블 글꼴 두께 */
+                                font-size: 1rem; /* 레이블의 글꼴 크기 */
+                                color: #212529; /* 레이블 글꼴 색상 */
+                            }
+
+                            /* 입력 필드 스타일 */
+                            p input[type="text"] {
+                                display: block; /* 입력 필드를 블록으로 표시하여 레이블과 같은 줄에 나타나지 않게 함 */
+                                width: 100%; /* 입력 필드가 부모 요소의 전체 너비를 차지하게 함 */
+                                padding: 0.375rem 0.75rem; /* 입력 필드 내부의 패딩 */
+                                font-size: 1rem; /* 입력 필드 글꼴 크기 */
+                                line-height: 1.5; /* 입력 필드의 줄 간격 */
+                                color: #495057; /* 입력 필드의 글꼴 색상 */
+                                background-color: #fff; /* 입력 필드의 배경색 */
+                                background-clip: padding-box; /* 입력 필드의 패딩이 잘리거나 겹치지 않게 함 */
+                                border: 1px solid #ced4da; /* 입력 필드의 테두리 */
+                                border-radius: 0.25rem; /* 입력 필드의 모서리를 둥글게 함 */
+                                transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out; /* 입력 필드의 전환 효과 */
+                            }
+
+                            /* 입력 필드 포커스 시 스타일 */
+                            p input[type="text"]:focus {
+                                border-color: #80bdff; /* 포커스 시 테두리 색상 */
+                                outline: 0; /* 기본 포커스 아웃라인 제거 */
+                                box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); /* 포커스 시 그림자 */
+                            }
+
+                            /* 입력 필드 비활성화 시 스타일 */
+                            p input[type="text"]:disabled {
+                                background-color: #e9ecef; /* 비활성화 시 배경색 */
+                                opacity: 1; /* 불투명도 설정 */
+                            }
+
+                        </style>
+                    {% endif %}
+                    <ul>
+                        {% for comment in comments %}
+                            <li class="comment-item">
+                                <span>{{ comment.content }} - {{ comment.user.username }}</span>
+
+                                {% if user == comment.user %}
+                                    <form action="{% url "products:comment_delete" product.pk comment.pk %}"
+                                          method="POST">
+                                        {% csrf_token %}
+                                        <input type="submit" value="삭제" class="btn btn-danger">
+                                    </form>
+                                {% endif %}
+
+
+                            </li>
+
+
+                        {% empty %}
+                            <li class="comment-item">댓글이 없습니다.</li>
+                        {% endfor %}
+                    </ul>
+
+                    <style>
+
+                        ul {
+                            list-style: none; /* 불렛 포인트 제거 */
+                            padding: 0;
+                        }
+
+                        .comment-item {
+                            display: flex; /* 항목을 가로로 정렬 */
+                            justify-content: space-between; /* form과 텍스트를 양쪽 끝으로 배치 */
+                            align-items: center; /* 항목을 세로 중앙에 정렬 */
+                            padding: 0.5rem 0; /* 항목에 상하 패딩 추가 */
+                            border-bottom: 1px solid #dee2e6; /* 하단에 얇은 경계선 추가 */
+                        }
+
+                        .delete-form {
+                            margin: 0;
+                            margin-right: 1rem; /* form과 텍스트 사이에 간격 추가 */
+                        }
+
+                        .delete-btn {
+                            background: none; /* 배경 제거 */
+                            border: none; /* 테두리 제거 */
+                            color: #dc3545; /* 부트스트랩의 danger 색상 */
+                            cursor: pointer; /* 마우스 커서를 포인터로 변경 */
+                            text-decoration: underline; /* 텍스트에 밑줄 추가 */
+                            font-size: 1rem; /* 폰트 크기 설정 */
+                            padding: 0;
+                        }
+
+                        .delete-btn:hover {
+                            color: #c82333; /* 호버 시 색상 변경 */
+                        }
+
+                        .comment-text {
+                            font-weight: 600; /* 텍스트를 굵게 표시 */
+                            color: #343a40; /* 어두운 텍스트 색상 */
+                            flex-grow: 1; /* 텍스트가 남은 공간을 차지하도록 설정 */
+                            text-align: right; /* 텍스트를 오른쪽 정렬 */
+                        }
+
+
+                    </style>
+
+
+                </div>
+            </div>
+        </main>
+
+
+    </div>
+
+
+
+
+
+
+{% endblock content %}
