@@ -60,7 +60,7 @@
 
                 <input type="search" name="query" value="{{ request.GET.query }}" class="form-control form-control-dark text-bg-dark"
                        placeholder="Search..." aria-label="Search">
-                <button type="submit">검색하기</button>
+
             </form>
 
             <div class="text-end">
@@ -68,7 +68,7 @@
                     <div class="dropdown text-end">
                         <a href="#" class="d-block link-body-emphasis text-decoration-none dropdown-toggle"
                            data-bs-toggle="dropdown" aria-expanded="false">
-                            <img src="{{ profile.profile_image.url }}" style="width: 32px;" class="rounded-circle">
+                            <img src="{{ profile.profile_image.url }}" style="width: 32px; height: 32px;" class="rounded-circle">
                         </a>
                         <ul class="dropdown-menu text-small" style="">
 
