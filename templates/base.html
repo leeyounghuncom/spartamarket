@@ -58,7 +58,8 @@
 
                 <input type="hidden" name="sort" value="{{ request.GET.sort }}">
 
-                <input type="search" name="query" value="{{ request.GET.query }}" class="form-control form-control-dark text-bg-dark"
+                <input type="search" name="query" value="{{ request.GET.query }}"
+                       class="form-control form-control-dark text-bg-dark"
                        placeholder="Search..." aria-label="Search">
 
             </form>
@@ -66,9 +67,10 @@
             <div class="text-end">
                 {% if request.user.is_authenticated %}
                     <div class="dropdown text-end">
-                        <a href="#" class="d-block link-body-emphasis text-decoration-none dropdown-toggle"
-                           data-bs-toggle="dropdown" aria-expanded="false">
-                            <img src="{{ profile.profile_image.url }}" style="width: 32px; height: 32px;" class="rounded-circle">
+                        <a href="#"
+                           class="text-secondary d-block link-body-emphasis text-decoration-none dropdown-toggle"
+                           data-bs-toggle="dropdown" aria-expanded="false"><span class="text-secondary ">
+                            {{ user.first_name|default:user.username }} 님                        </span>
                         </a>
                         <ul class="dropdown-menu text-small" style="">
 
